@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebTeam\Demo\CosmicSystems\Providers;
 
 use WebTeam\Demo\Cosmic\Proto\Provider;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebTeam\Demo\CosmicSystems\Providers\Lyra;
 
 use WebTeam\Demo\Cosmic\Proto\StatusRequest;
@@ -10,8 +12,8 @@ class LyraApi
 
     public function __construct(
         readonly private LyraConfig $configuration
-    )
-    {}
+    ) {
+    }
 
     public function status(StatusRequest $request): array
     {
@@ -20,20 +22,22 @@ class LyraApi
             'Username' => 'demo',
             'OrderId' => $request->getRequestId(),
             'Client' => "desktop",
-            'Attributes' => null
+            'Attributes' => null,
         ];
 
         return $this->post($method, $data);
     }
 
-    public function charge(): array
+    public function charge(StatusRequest $request): array
     {
         $method = 'Charge';
         $data = [
             'Username' => 'demo',
             'Client' => "desktop",
             'NotificationURL' => "https://gate.wtstage.lol/api/v1/notification",
-            'MessageID' => rand(1, 999999),
+            'MessageId' => rand(1, 999999),
+            'OrderId' => $request->getRequestId(),
+            'Attributes' => null,
         ];
 
         return $this->post($method, $data);
@@ -46,25 +50,27 @@ class LyraApi
 
     private function post(string $method, array $data): array
     {
-        $uuid    = $this->configuration->generateUuid();
+        $uuid = $this->configuration->generateUuid();
+
         $payload = json_encode([
-                                   'method' => $method,
-                                   'params' => [
-                                       'Signature' => $this->configuration->sign($method, $uuid, $data),
-                                       'UUID'      => $uuid,
-                                       'Data'      => $data
-                                   ]
-                               ]);
+            'method' => $method,
+            'params' => [
+                'Signature' => $this->configuration->sign($method, $uuid, $data),
+                'UUID' => $uuid,
+                'Data' => $data,
+            ],
+        ]);
 
         $response = $this->configuration->client()->post(
             self::API_URL,
             [
                 'headers' => ['Content-Type' => 'application/json'],
-                'body'    => $payload
+                'body' => $payload,
             ]
         );
 
         $body = $response->getBody();
-        return json_decode($body, true);
+
+        return json_decode((string) $body, true);
     }
 }
