@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebTeam\Demo\CosmicSystems\Common;
 
 use Google\Protobuf\Internal\Message;
@@ -10,11 +12,12 @@ use WebTeam\Demo\Cosmic\Proto\CosmicSystemsInterface;
 use WebTeam\Demo\Cosmic\Proto\StatusRequest;
 use WebTeam\Demo\Cosmic\Proto\StatusResponse;
 
-class CosmicSystems implements CosmicSystemsInterface
+class CosmicSystemService implements CosmicSystemsInterface
 {
     public function __construct(
         private readonly ProviderFactory $factory
-    ) {}
+    ) {
+    }
 
     public function statusCommand(ContextInterface $ctx, StatusRequest $in): StatusResponse
     {
@@ -25,6 +28,7 @@ class CosmicSystems implements CosmicSystemsInterface
     {
         $config = $this->factory->getConfiguration($request->getProvider());
         $className = $config->commands()[$name];
+
         return new $className($config, $request, $context);
     }
 }

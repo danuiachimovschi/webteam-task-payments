@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebTeam\Demo\CosmicSystems\Common;
 
 use GuzzleHttp\Client;
@@ -20,13 +22,12 @@ abstract class AbstractConfiguration
         return ['http_errors' => 0];
     }
 
-    public function client() : ClientInterface
+    public function client(): ClientInterface
     {
         if (isset($this->client)) {
             return $this->client;
         }
 
         return $this->client = new Client($this->clientOptions());
-
     }
 }

@@ -8,7 +8,9 @@
         "spiral/roadrunner-grpc": "^3.3",
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^7.8",
-        "webteam-srl/test-protobuf": "dev-main"
+        "webteam-srl/test-protobuf": "dev-main",
+        "grpc/grpc": "^1.57",
+        "google/protobuf": "^4.27"
     },
     "repositories": {
         "test-protobuf": {
@@ -20,5 +22,8 @@
         "psr-4": {
             "WebTeam\\Demo\\CosmicSystems\\": "."
         }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.4"
     }
 }
